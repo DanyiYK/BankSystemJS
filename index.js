@@ -107,7 +107,7 @@ function promptAmount() {
 }
 
 function standartPanel() {
-    
+
 }
 
 addAccount({
@@ -138,6 +138,7 @@ alert("Sei loggato con " + currentBankAccount.username);
 
 let running = true
 let userInput, returnVal;
+let actionList = currentBankAccount.admin && "1. Show bank accounts"
 while(running) {
     userInput = +prompt("1. Balance\n2. Transaction History\n3. Withdraw\n4. Deposit\n5. Exit");
 
