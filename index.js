@@ -18,19 +18,25 @@ function addAccount({ username, pin, amount }) {
         },
         withdraw(withdraw_amount){
             if(withdraw_amount > this.balance) {
-                return "You can't withdraw more money than the one you have";
+                return "You wish you had the money eheh";
+            } else if (withdraw_amount <= 0) {
+                return "You can't withdraw a negative amount of money."
             }
 
             this.balance -= withdraw_amount;
             this.logTransaction("withdraw", withdraw_amount);
+        
+            return "Success!\n" + this.getBalance();
         },
         deposit(deposit_amount){
-            if(deposit_amount >= 0) {
+            if(deposit_amount <= 0) {
                 return "You can't deposit a negative amount of money.";
             }
 
             this.balance += deposit_amount;
-            this.logTransaction("deposit", withdraw_amount);
+            this.logTransaction("deposit", deposit_amount);
+ 
+            return "Success!\n" + this.getBalance();
         },
         getBalance(){
             return `You currently have €${this.balance.toFixed(BALANCE_DECIMAL_POINTS)}`;
@@ -44,7 +50,7 @@ function addAccount({ username, pin, amount }) {
             }
 
             for(let transaction of this.transactions) {
-                return_val += `Type: ${transaction.type}\nAmount: ${transaction.amount}\nDate: ${transaction.date}\n${("-").repeat(20)}`;
+                return_val += `\n${("-").repeat(20)}\nType: ${transaction.type}\nAmount: ${transaction.amount}\nDate: ${transaction.date}`;
             }
 
             return return_val
@@ -76,9 +82,9 @@ function promptAuthentication() {
 
     // Request pin
     let pin;
-
+    
     while(true) {
-        pin = +prompt("Insert your pin:")
+        pin = prompt("Insert your pin:")
         
         if(pin===selectedBankAccount.pin) {
             break
@@ -100,20 +106,30 @@ function promptAmount() {
     return amount;
 }
 
+function standartPanel() {
+    
+}
+
 addAccount({
     username: "Carlo",
-    pin: 1010,
+    pin: "1010",
     amount: 100 
 })
 addAccount({
     username: "Gertrude",
-    pin: 1292,
+    pin: "1292",
     amount: 1945 
 })
 addAccount({
     username: "Luca",
-    pin: 1524,
+    pin: "1524",
     amount: 0 
+})
+addAccount({
+    username: "admin",
+    pin: "0000",
+    amount: 0,
+    admin: true
 })
 
 currentBankAccount = promptAuthentication();
@@ -127,14 +143,24 @@ while(running) {
 
     switch(userInput){
         case 1:
-            alert(currentBankAccount.getBalance());
+            returnVal = currentBankAccount.getBalance();
             break;
         case 2:
-            alert(currentBankAccount.getHistory());
+            returnVal = currentBankAccount.getHistory();
             break;
         case 3:
-
+            returnVal = currentBankAccount.withdraw(promptAmount());
+            break;
+        case 4:
+            returnVal = currentBankAccount.deposit(promptAmount());
+            break;    
         case 5:
             running = false;
+            returnVal = "Thank you for using my Bank System.";
+            break;
+        default:
+            returnVal = "Please, insert a valid input.";
     }
+
+    alert(returnVal);
 }
